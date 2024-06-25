@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Função para exibir o menu principal
+exibir_menu() {
+    clear
+    echo "### MENU PRINCIPAL ###"
+    echo "1. Mover um arquivo"
+    echo "2. Copiar um arquivo"
+    echo "3. Dar permissão de execução a um arquivo"
+    echo "4. Fazer backup do diretório de Documentos"
+    echo "5. Trocar permissões do Dono de um arquivo"
+    echo "6. Trocar permissões do Grupo de um arquivo"
+    echo "7. Trocar permissões de Outros de um arquivo"
+    echo "8. Procurar ocorrências de 'perl' no arquivo /var/log/dpkg.log"
+    echo "9. Sair do programa"
+    echo "-----------------------"
+}
+
+# Função para mover um arquivo
+mover_arquivo() {
+    read -p "Digite o diretório de origem: " origem
+    read -p "Digite o diretório de destino: " destino
+    read -p "Digite o nome do arquivo: " arquivo
+    mv "$origem/$arquivo" "$destino/"
+    echo "Arquivo movido com sucesso!"
+    read -p "Pressione Enter para continuar..."
+}
+
+# Função para copiar um arquivo
+copiar_arquivo() {
+    read -p "Digite o diretório de origem: " origem
+    read -p "Digite o diretório de destino: " destino
+    read -p "Digite o nome do arquivo: " arquivo
+    cp "$origem/$arquivo" "$destino/"
+    echo "Arquivo copiado com sucesso!"
+    read -p "Pressione Enter para continuar..."
+}
+
+# Função para dar permissão de execução a um arquivo
+dar_permissao_execucao() {
+    read -p "Digite o diretório do arquivo: " diretorio
+    read -p "Digite o nome do arquivo: " arquivo
+    chmod +x "$diretorio/$arquivo"
+    echo "Permissão de execução concedida ao arquivo!"
+    read -p "Pressione Enter para continuar..."
+}
+
+# Função para fazer backup do diretório de Documentos
+fazer_backup_documentos() {
+    diretorio_docs="$HOME/Documentos"
+    if [ ! -d "$HOME/Backup" ]; then
+        mkdir "$HOME/Backup"
+    fi
+    zip -r "$HOME/Backup/documentos_backup_$(date '+%Y-%m-%d').zip" "$diretorio_docs"
+    echo "Backup dos documentos realizado e zipado em $HOME/Backup!"
+    read -p "Pressione Enter para continuar..."
+}
+
+# Função para trocar permissões do Dono de um arquivo
+trocar_permissoes_dono() {
+    read -p "Digite o diretório do arquivo: " diretorio
+    read -p "Digite o nome do arquivo: " arquivo
+    echo "Selecione a permissão do Dono:"
+    echo "1. Ler"
+    echo "2. Gravar"
+    echo "3. Executar"
+    read -p "Opção: " opcao
+    case $opcao in
+        1) chmod u+r "$diretorio/$arquivo";;
+        2) chmod u+w "$diretorio/$arquivo";;
+        3) chmod u+x "$diretorio/$arquivo";;
+        *) echo "Opção inválida";;
+    esac
+    read -p "Pressione Enter para continuar..."
+}
+
+# Função para trocar permissões do Grupo de um arquivo
+trocar_permissoes_grupo() {
+    read -p "Digite o diretório do arquivo: " diretorio
+    read -p "Digite o nome do arquivo: " arquivo
+    echo "Selecione a permissão do Grupo:"
+    echo "1. Ler"
+    echo "2. Gravar"
+    echo "3. Executar"
+    read -p "Opção: " opcao
+    case $opcao in
+        1) chmod g+r "$diretorio/$arquivo";;
+        2) chmod g+w "$diretorio/$arquivo";;
+        3) chmod g+x "$diretorio/$arquivo";;
+        *) echo "Opção inválida";;
+    esac
+    read -p "Pressione Enter para continuar..."
+}
+
+# Função para trocar permissões de Outros de um arquivo
+trocar_permissoes_outros() {
+    read -p "Digite o diretório do arquivo: " diretorio
+    read -p "Digite o nome do arquivo: " arquivo
+    echo "Selecione a permissão de Outros:"
+    echo "1. Ler"
+    echo "2. Gravar"
+    echo "3. Executar"
+    read -p "Opção: " opcao
+    case $opcao in
+        1) chmod o+r "$diretorio/$arquivo";;
+        2) chmod o+w "$diretorio/$arquivo";;
+        3) chmod o+x "$diretorio/$arquivo";;
+        *) echo "Opção inválida";;
+    esac
+    read -p "Pressione Enter para continuar..."
+}
+
+# Função para procurar ocorrências de 'perl' no arquivo /var/log/dpkg.log
+procurar_ocorrencias_perl() {
+    grep 'perl' /var/log/dpkg.log
+    read -p "Pressione Enter para continuar..."
+}
+
+# Loop principal do programa
+while true; do
+    exibir_menu
+
+    read -p "Digite a opção desejada (1-9): " opcao
+    case $opcao in
+        1) mover_arquivo;;
+        2) copiar_arquivo;;
+        3) dar_permissao_execucao;;
+        4) fazer_backup_documentos;;
+        5) trocar_permissoes_dono;;
+        6) trocar_permissoes_grupo;;
+        7) trocar_permissoes_outros;;
+        8) procurar_ocorrencias_perl;;
+        9) echo "Saindo do programa..."; break;;
+        *) echo "Opção inválida. Tente novamente."; read -p "Pressione Enter para continuar...";;
+    esac
